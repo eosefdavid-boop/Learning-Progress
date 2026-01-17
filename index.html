@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Learning Progress</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <h1>📘 Learning Progress</h1>
+      <p class="subtitle">-Eosef DelaTorre</p>
+
+      <!-- DAILY GOAL -->
+      <div class="card">
+        <h2>Today's Goal</h2>
+        <input id="goalInput" placeholder="What will you study today?" />
+        <button onclick="saveGoal()">Save Goal</button>
+        <p id="goalDisplay"></p>
+      </div>
+
+      <!-- TIMER -->
+      <div class="card">
+        <h2>Focus Timer (25 min)</h2>
+        <div id="timer">25:00</div>
+        <button onclick="startTimer()">Start Session</button>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="card">
+        <h2>Overall Progress</h2>
+        <div class="progress-box">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p id="progressText">0%</p>
+        <button onclick="addProgress()">+5%</button>
+      </div>
+
+      <!-- STUDY LOG -->
+      <div class="card">
+        <h2>What Did You Learn?</h2>
+        <textarea
+          id="studyLog"
+          placeholder="Write what you understood today..."
+        ></textarea>
+        <button onclick="saveLog()">Save Log</button>
+        <ul id="logList"></ul>
+      </div>
+
+      <!-- STUDY TIP -->
+      <div class="card">
+        <h2>Study Coach Tip</h2>
+        <p id="studyTip">Click below to get a study tip.</p>
+        <button onclick="showTip()">Get Study Tip</button>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="card">
+        <h2>Study Analytics</h2>
+        <canvas id="studyChart"></canvas>
+      </div>
+
+      <!-- STREAK -->
+      <div class="card">
+        <h2>Study Streak</h2>
+        <p id="streakText">🔥 0 days</p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
