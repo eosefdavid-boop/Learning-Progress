@@ -1,18 +1,36 @@
-// ===== DAILY GOAL =====
-function saveGoal() {
-  const goal = document.getElementById("goalInput").value;
-  if (!goal) return;
+document.addEventListener("DOMContentLoaded", () => {
 
-  localStorage.setItem("studyGoal", goal);
-  document.getElementById("goalDisplay").innerText = "🎯 " + goal;
+  // ===== DAILY GOAL =====
+  function saveGoal() {
+    const goal = document.getElementById("goalInput").value;
+    if (!goal) return;
+
+    localStorage.setItem("studyGoal", goal);
+    document.getElementById("goalDisplay").innerText = "🎯 " + goal;
+  }
+  window.saveGoal = saveGoal;
+
+  document.getElementById("goalDisplay").innerText =
+    "🎯 " + (localStorage.getItem("studyGoal") || "No goal set");
+
+  // ===== CUSTOM TIMER (REPLACEMENT) =====
+let defaultMinutes = Number(localStorage.getItem("timerMinutes")) || 25;
+let time = defaultMinutes * 60;
+let interval = null;
+
+// Load saved value into input
+document.getElementById("timerMinutes").value = defaultMinutes;
+updateTimer();
+
+function saveTimer() {
+  const mins = Number(document.getElementById("timerMinutes").value);
+  if (mins < 1) return;
+
+  localStorage.setItem("timerMinutes", mins);
+  defaultMinutes = mins;
+  resetTimer();
 }
-
-document.getElementById("goalDisplay").innerText =
-  "🎯 " + (localStorage.getItem("studyGoal") || "No goal set");
-
-// ===== TIMER =====
-let time = 25 * 60;
-let interval;
+window.saveTimer = saveTimer;
 
 function startTimer() {
   if (interval) return;
@@ -24,14 +42,22 @@ function startTimer() {
       alert("Session complete! Great focus 👏");
       logSession();
       addProgress();
-      time = 25 * 60;
-      updateTimer();
+      resetTimer();
       return;
     }
     time--;
     updateTimer();
   }, 1000);
 }
+window.startTimer = startTimer;
+
+function resetTimer() {
+  clearInterval(interval);
+  interval = null;
+  time = defaultMinutes * 60;
+  updateTimer();
+}
+window.resetTimer = resetTimer;
 
 function updateTimer() {
   const min = Math.floor(time / 60);
@@ -40,111 +66,128 @@ function updateTimer() {
     `${min}:${sec.toString().padStart(2, "0")}`;
 }
 
-// ===== PROGRESS =====
-let progress = Number(localStorage.getItem("progress")) || 0;
 
-function addProgress() {
-  progress = Math.min(progress + 5, 100);
-  localStorage.setItem("progress", progress);
+  // ===== PROGRESS =====
+  let progress = Number(localStorage.getItem("progress")) || 0;
+
+  function addProgress() {
+    progress = Math.min(progress + 5, 100);
+    localStorage.setItem("progress", progress);
+    updateProgress();
+  }
+  window.addProgress = addProgress;
+
+  function updateProgress() {
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressText").innerText = progress + "%";
+  }
   updateProgress();
-}
 
-function updateProgress() {
-  document.getElementById("progressBar").style.width = progress + "%";
-  document.getElementById("progressText").innerText = progress + "%";
-}
-
-updateProgress();
-
-// ===== STUDY LOG =====
-function saveLog() {
+  // ===== STUDY LOG =====
+ function saveLog() {
   const text = document.getElementById("studyLog").value;
   if (!text) return;
 
-  const li = document.createElement("li");
-  li.innerText = "🧠 " + text;
-  document.getElementById("logList").appendChild(li);
+  let logs = JSON.parse(localStorage.getItem("studyLogs")) || [];
+  logs.push(text);
+  localStorage.setItem("studyLogs", JSON.stringify(logs));
+
+  renderLogs();
   document.getElementById("studyLog").value = "";
 
   updateStreak();
 }
 
-// ===== STUDY TIPS =====
-function showTip() {
-  const tips = [
-    "“Live as if you were to die tomorrow. Learn as if you were to live forever.” — Mahatma Gandhi",
-    "“The beautiful thing about learning is that no one can take it away from you.” — B.B. King",
-    "“Success is the sum of small efforts repeated day in and day out.” — Robert Collier",
-    "“There are no shortcuts to any place worth going.” — Beverly Sills",
-    "“An investment in knowledge pays the best interest.” — Benjamin Franklin",
-    "“The expert in anything was once a beginner.” — Helen Hayes",
-    "“Don’t wish it were easier; wish you were better.” — Jim Rohn",
-    "“Education is the most powerful weapon which you can use to change the world.” — Nelson Mandela",
-    "“It always seems impossible until it’s done.” — Nelson Mandela",
-    "“Learning never exhausts the mind.” — Leonardo da Vinci",
-    "“Discipline is the bridge between goals and accomplishment.” — Jim Rohn",
-    "“The future belongs to those who prepare for it today.” — Malcolm X",
-    "“Small progress is still progress.” — Anonymous",
-    "“You don’t have to be great to start, but you have to start to be great.” — Zig Ziglar",
-    "“Study while others are sleeping; work while others are loafing.” — William A. Ward",
-    "“If you are willing to learn, no one can stop you.” — Anonymous",
-    "“Dreams don’t work unless you do.” — John C. Maxwell",
-    "“Push yourself, because no one else is going to do it for you.” — Anonymous",
-    "“Hard work beats talent when talent doesn’t work hard.” — Tim Notke",
-    "“The secret of getting ahead is getting started.” — Mark Twain"
-  ];
+function renderLogs() {
+  const logs = JSON.parse(localStorage.getItem("studyLogs")) || [];
+  const list = document.getElementById("logList");
+  list.innerHTML = "";
 
-  const tip = tips[Math.floor(Math.random() * tips.length)];
-  document.getElementById("studyTip").innerText = tip;
-}
-
-
-// ===== STREAK =====
-function updateStreak() {
-  const today = new Date().toDateString();
-  const last = localStorage.getItem("lastStudyDay");
-  let streak = Number(localStorage.getItem("streak")) || 0;
-
-  if (last !== today) {
-    streak++;
-    localStorage.setItem("streak", streak);
-    localStorage.setItem("lastStudyDay", today);
-  }
-
-  document.getElementById("streakText").innerText = `🔥 ${streak} days`;
-}
-
-document.getElementById("streakText").innerText =
-  `🔥 ${localStorage.getItem("streak") || 0} days`;
-
-// ===== ANALYTICS =====
-let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
-let chart;
-
-function logSession() {
-  const day = new Date().toLocaleDateString();
-  sessions.push(day);
-  localStorage.setItem("sessions", JSON.stringify(sessions));
-  updateChart();
-}
-
-function updateChart() {
-  const counts = {};
-  sessions.forEach(d => counts[d] = (counts[d] || 0) + 1);
-
-  const ctx = document.getElementById("studyChart").getContext("2d");
-  if (chart) chart.destroy();
-
-  chart = new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: Object.keys(counts),
-      datasets: [{
-        label: "Study Sessions",
-        data: Object.values(counts)
-      }]
-    }
+  logs.forEach(log => {
+    const li = document.createElement("li");
+    li.innerText = "🧠 " + log;
+    list.appendChild(li);
   });
 }
 
-updateChart();
+renderLogs();
+
+  // ===== STUDY TIPS =====
+  function showTip() {
+    const tips = [
+  "Set a clear goal before each study session (Example: Finish 10 math problems or understand photosynthesis).",
+  "Use the Pomodoro Technique: Study for 25 minutes, then take a 5-minute break.",
+  "Active recall beats rereading. Test yourself instead of just reading notes.",
+  "Teach what you learn to someone else. It reinforces understanding.",
+  "Study a little every day. 1–2 hours daily is better than 8 hours the night before an exam.",
+  "Create a simple study schedule to avoid wasting time deciding what to study.",
+  "Review before sleeping. A 10–15 minute review before bed improves memory.",
+  "Study with light background noise if it helps you focus.",
+  "Sleep at least 7–8 hours. A well-rested brain learns better.",
+  "Drink water while studying. Hydration improves concentration."
+];
+
+    const tip = tips[Math.floor(Math.random() * tips.length)];
+    document.getElementById("studyTip").innerText = tip;
+  }
+  window.showTip = showTip;
+
+  // ===== STREAK =====
+  function updateStreak() {
+    const today = new Date().toDateString();
+    const last = localStorage.getItem("lastStudyDay");
+    let streak = Number(localStorage.getItem("streak")) || 0;
+
+    if (last !== today) {
+      streak++;
+      localStorage.setItem("streak", streak);
+      localStorage.setItem("lastStudyDay", today);
+    }
+
+    document.getElementById("streakText").innerText = `🔥 ${streak} days`;
+  }
+
+  document.getElementById("streakText").innerText =
+    `🔥 ${localStorage.getItem("streak") || 0} days`;
+
+  // ===== ANALYTICS (SAFE OFFLINE) =====
+  let sessions = JSON.parse(localStorage.getItem("sessions")) || [];
+  let chart = null;
+
+  function logSession() {
+    const day = new Date().toLocaleDateString();
+    sessions.push(day);
+    localStorage.setItem("sessions", JSON.stringify(sessions));
+    updateChart();
+  }
+
+  function updateChart() {
+    if (typeof Chart === "undefined") {
+      console.warn("Chart.js not available offline — skipping chart");
+      return;
+    }
+
+    const counts = {};
+    sessions.forEach(d => counts[d] = (counts[d] || 0) + 1);
+
+    const canvas = document.getElementById("studyChart");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Object.keys(counts),
+        datasets: [{
+          label: "Study Sessions",
+          data: Object.values(counts)
+        }]
+      }
+    });
+  }
+
+  updateChart();
+
+});
