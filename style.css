@@ -1,51 +1,354 @@
-body {
-  background: #020617;
-  font-family: Arial, sans-serif;
-  color: #e5e7eb;
+/* ================== RESET ================== */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, Arial, sans-serif;
   margin: 0;
+  padding: 0;
 }
 
+/* ================== BODY ================== */
+body {
+  background: #f8fafc;
+  color: #111827;
+  transition: background 0.3s, color 0.3s;
+  min-height: 100vh;
+  position: relative;
+}
+
+body.dark {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* ================== APP ================== */
 .app {
-  max-width: 800px;
+  max-width: 900px;
   margin: auto;
   padding: 20px;
+  font-size: 16px;
 }
 
-h1 {
-  text-align: center;
-}
-
-.subtitle {
-  text-align: center;
-  color: #94a3b8;
-  margin-bottom: 30px;
-}
-
-.card {
-  background: #0f172a;
-  padding: 20px;
-  border-radius: 14px;
+/* ================== HEADER ================== */
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-textarea {
-  width: 100%;
-  height: 100px;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
+.top button {
+  min-height: 32px;
+  padding: 6px 10px;
+  margin-left: 6px;
 }
 
-button {
-  margin-top: 10px;
+/* ================== CARDS ================== */
+.card {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  transition: transform 0.2s;
+}
+
+body.dark .card {
+  background: #0f172a;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+/* ================== INPUTS ================== */
+input,
+textarea,
+select {
+  width: 100%;
   padding: 10px;
-  background: #22c55e;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background: #020617;
+  color: white;
+  border-color: #334155;
+}
+
+/* ================== BUTTONS ================== */
+button {
+  padding: 8px 12px;
+  margin-top: 8px;
+  min-height: 40px;
+  border-radius: 8px;
   border: none;
-  border-radius: 10px;
-  font-weight: bold;
+  background: var(--accent-color, #991b1b);
+  color: white;
+  font-weight: 600;
   cursor: pointer;
+  transition: transform 0.15s;
 }
 
 button:hover {
-  background: #16a34a;
+  transform: scale(1.03);
+}
+
+button.secondary {
+  background: #6b7280;
+}
+
+/* ================== TIMER ================== */
+#timerDisplay {
+  font-size: 2.2rem;
+  text-align: center;
+  margin: 12px 0;
+  font-weight: 600;
+}
+
+.timer-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* ================== PROGRESS ================== */
+.progress-box {
+  height: 14px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent-color, #991b1b), #dc2626);
+  transition: width 0.4s ease;
+}
+
+/* ================== LIST ================== */
+ul {
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+/* ================== LANDING PAGE ================== */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  color: white;
+}
+
+.landing h1 {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+}
+
+.landing p {
+  max-width: 600px;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+.landing ul {
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.landing li {
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.get-started {
+  background: white;
+  color: #991b1b;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.get-started:hover {
+  transform: scale(1.05);
+}
+
+.maker {
+  margin-top: 40px;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+/* ================== MODAL ================== */
+.modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 60px auto;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+body.dark .modal-content {
+  background-color: #0f172a;
+  color: white;
+}
+
+.modal-content h2, .modal-content h3 {
+  margin-bottom: 12px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* ================== FONT SIZES ================== */
+body.font-small { font-size: 14px; }
+body.font-medium { font-size: 16px; }
+body.font-large { font-size: 18px; }
+
+/* ================== MOBILE ================== */
+@media (max-width: 600px) {
+  .app {
+    padding: 14px;
+  }
+  .landing {
+    padding: 20px;
+  }
+}
+
+/* ================== FILE ORGANIZER ================== */
+#sectorContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.sector {
+  background: #f1f5f9;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+body.dark .sector {
+  background: #1e293b;
+}
+
+.sector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sector-header h3 {
+  margin: 0;
+}
+
+.sector-header input {
+  flex: 1;
+  margin-right: 8px;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.sector-header button {
+  margin-left: 4px;
+}
+
+.file-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+.file-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+body.dark .file-list li {
+  background: #334155;
+  color: white;
+}
+
+.file-list a {
+  color: var(--accent-color, #991b1b);
+  text-decoration: none;
+}
+
+.file-list button {
+  background: #ef4444;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  min-height: auto;
+}
+
+.file-upload {
+  margin-top: 8px;
+}
+
+/* ================== FILE UPLOAD BUTTON ================== */
+.file-upload input[type="file"] {
+  display: none;
+}
+
+.file-upload label {
+  display: inline-block;
+  background: var(--accent-color, #991b1b);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.file-upload label:hover {
+  transform: scale(1.05);
+}
+
+/* ================== BUTTONS ================== */
+button.add-sector {
+  background: #2563eb;
+}
+
+button.remove-sector {
+  background: #ef4444;
 }
