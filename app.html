@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Study Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <!-- HEADER -->
+      <div class="top">
+        <h1>Study Tracker</h1>
+        <div>
+          <button onclick="toggleTheme()">Toggle Theme</button>
+          <button onclick="openSettings()">⚙ Settings</button>
+        </div>
+      </div>
+
+      <!-- DAILY GOAL -->
+      <div class="card">
+        <h2>Today's Goal</h2>
+        <input id="goalInput" placeholder="What will you study today?" />
+        <button onclick="saveGoal()">Save Goal</button>
+        <p id="goalDisplay"></p>
+      </div>
+
+      <!-- FOCUS TIMER -->
+      <div class="card">
+        <h2>Focus Timer</h2>
+
+        <label>Focus minutes</label>
+        <input type="number" id="focusMinutes" min="1" />
+
+        <label>Break minutes</label>
+        <input type="number" id="breakMinutes" min="1" />
+
+        <div id="timerDisplay">25:00</div>
+
+        <div class="timer-buttons">
+          <button onclick="saveTimer()">Save</button>
+          <button onclick="startTimer()">Start</button>
+          <button class="secondary" onclick="resetTimer()">Reset</button>
+        </div>
+
+        <p id="timerStatus"></p>
+      </div>
+
+      <!-- PROGRESS -->
+      <div class="card">
+        <h2>Overall Progress</h2>
+        <div class="progress-box">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <p id="progressText">0 minutes studied</p>
+      </div>
+
+      <!-- STUDY LOG -->
+      <div class="card">
+        <h2>What Did You Learn Today?</h2>
+        <textarea
+          id="studyLog"
+          placeholder="Write what you understood..."
+        ></textarea>
+        <button onclick="saveLog()">Save Log</button>
+        <button onclick="exportLogs()">Export Logs</button>
+        <ul id="logList"></ul>
+      </div>
+
+      <!-- STUDY TIP -->
+      <div class="card">
+        <h2>Study Coach Tip</h2>
+        <p id="studyTip"></p>
+        <button onclick="showTip()">New Tip</button>
+      </div>
+
+      <!-- STREAK -->
+      <div class="card">
+        <h2>Study Streak</h2>
+        <p id="streakText">0 days</p>
+      </div>
+
+      <!-- ANALYTICS -->
+      <div class="card">
+        <h2>Study Analytics</h2>
+        <canvas id="studyChart" height="160"></canvas>
+      </div>
+
+      <!-- ================= FILE ORGANIZER ================= -->
+      <div class="card">
+        <h2>My Files</h2>
+        <div id="sectorContainer"></div>
+        <button onclick="addSector()">+ Add New Sector</button>
+      </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeSettings()">&times;</span>
+        <h2>Settings</h2>
+
+        <label>Theme:</label>
+        <select id="themeSelect" onchange="changeTheme()">
+          <option value="light">Light</option>
+          <option value="dark">Dark</option>
+          <option value="system">System</option>
+        </select>
+
+        <label>Accent Color:</label>
+        <select id="accentSelect" onchange="changeAccent()">
+          <option value="#991b1b">Red</option>
+          <option value="#2563eb">Blue</option>
+          <option value="#16a34a">Green</option>
+          <option value="#7c3aed">Purple</option>
+        </select>
+
+        <label>Font Size:</label>
+        <select id="fontSelect" onchange="changeFont()">
+          <option value="small">Small</option>
+          <option value="medium" selected>Medium</option>
+          <option value="large">Large</option>
+        </select>
+
+        <label>Default Focus Minutes:</label>
+        <input type="number" id="defaultFocus" min="1" />
+
+        <label>Default Break Minutes:</label>
+        <input type="number" id="defaultBreak" min="1" />
+
+        <label>
+          <input type="checkbox" id="autoStart" /> Auto-start next session
+        </label>
+
+        <label>
+          <input type="checkbox" id="soundToggle" checked /> Beep sound
+        </label>
+
+        <label>Profile Name:</label>
+        <input type="text" id="profileName" placeholder="Your name" />
+
+        <label>Motivation Quote:</label>
+        <input
+          type="text"
+          id="motivationQuote"
+          placeholder="Stay consistent!"
+        />
+
+        <button onclick="saveSettings()">Save Settings</button>
+        <button class="secondary" onclick="resetData()">Reset All Data</button>
+
+        <h3>About</h3>
+        <p>Study Tracker v1.0</p>
+        <p>P.B- Eosef DelaTorre</p>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
